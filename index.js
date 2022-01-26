@@ -30,13 +30,59 @@ const mappingButtons = {
 	},
 };
 
+//  select all drums in an array
 const allDrums = document.querySelectorAll('.drum');
 
-function playDrum(event) {
-	console.log(event.target);
-}
-
+// assign image to each drum
 for (let drum of allDrums) {
 	const letter = drum.textContent;
 	const imageUrl = mappingButtons[letter].image;
+
+	drum.style.backgroundImage = 'url(' + imageUrl + ')';
 }
+
+function addAnimation(drum) {
+	if (drum) {
+		// add class pressed
+		drum.classList.add('pressed');
+
+		// play corresponding sound
+		const letter = drum.textContent;
+		const audioUrl = mappingButtons[letter].sound;
+		const audio = new Audio(audioUrl);
+		audio.play();
+	}
+}
+
+function removeAnimation(drum) {
+	if (drum) {
+		drum.classList.remove('pressed');
+	}
+}
+
+// add event listener on click
+for (let drum of allDrums) {
+	drum.addEventListener('mousedown', function (event) {
+		addAnimation(event.target);
+	});
+	drum.addEventListener('mouseup', function (event) {
+		removeAnimation(event.target);
+	});
+}
+
+document.body.addEventListener('keydown', function (event) {
+	console.log(event.key);
+	const keyPressed = event.key;
+	const drum = document.querySelector('.' + keyPressed);
+	if (drum) {
+		addAnimation(drum);
+	}
+});
+
+document.body.addEventListener('keyup', function (event) {
+	const keyPressed = event.key;
+	const drum = document.querySelector('.' + keyPressed);
+	if (drum) {
+		removeAnimation(drum);
+	}
+});
